@@ -6,7 +6,7 @@ An unofficial macOS menu bar app for streaming Classic FM live, with now-playing
 
 Click **▶** in the menu bar to play. Click **■** to stop. Each new session starts at the live broadcast. Click **FM ▾** for the piece, composer, cover artwork and playback status. The popover also has a Quit button.
 
-<img src="docs/images/now-playing.png" width="330" alt="Classic FM popover playing Fairytale of New York, with composer credits, album artwork and a Stop button">
+<img src="docs/images/now-playing.png" width="330" alt="Classic FM playing Dvořák’s Serenade for Strings, with album artwork and the pause-Music checkbox enabled">
 
 ## Build and run
 
@@ -26,6 +26,14 @@ Add a **System → Open** action to a key. Choose **Toggle Classic FM.app** as t
 ```sh
 open -g -b com.robmarkcole.classic-fm-menubar classicfmradio://toggle
 ```
+
+## Switching between Music and Classic FM
+
+Start playback in the Mac’s Music app and Classic FM stops, even while the radio is buffering. Pausing or quitting Music leaves the radio stopped until you press Play again.
+
+Starting Classic FM from the menu bar, popover or Stream Deck asks Music to pause if it is running. **Pause Music when starting Classic FM** is on by default. Uncheck it in the **FM ▾** popover to leave Music alone when starting the radio. Your choice is saved across launches.
+
+macOS may ask for Automation access the first time Classic FM tries to pause Music. If you decline, the radio still plays and you can pause Music yourself. You can change access later in **System Settings → Privacy & Security → Automation**.
 
 ## Audio and track information
 

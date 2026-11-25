@@ -1,3 +1,4 @@
+import AppKit
 import AVFoundation
 import Combine
 import OSLog
@@ -11,6 +12,32 @@ final class Radio: ObservableObject {
             if oldValue != status { log.info("\(self.status, privacy: .public)") }
         }
     }
+    @Published private(set) var musicNotice: String?
+    @Published var pauseMusic: Bool {
+        didSet {
+            UserDefaults.standard.set(pauseMusic, forKey: MusicPlayback.preferenceKey)
+            if !pauseMusic {
+                musicNotice = nil
+                if pendingStart != nil {
+                    pendingStart?.cancel()
+                    pendingStart = nil
+                    startStream()
+                }
+            }
+        }
+    }
+    private var musicPlayback: MusicPlayback?
+    private var pendingStart: Task<Void, Never>?
+
+    init() {
+        UserDefaults.standard.register(defaults: [MusicPlayback.preferenceKey: true])
+        pauseMusic = UserDefaults.standard.bool(forKey: MusicPlayback.preferenceKey)
+        musicPlayback = MusicPlayback { [weak self] in
+            guard let self, self.active else { return }
+            self.stop("Stopped because Music started")
+        }
+    }
+
     private var player: AVPlayer?
     private var observations: [NSKeyValueObservation] = []
     private var endObservers: [NSObjectProtocol] = []
@@ -20,10 +47,31 @@ final class Radio: ObservableObject {
             stop("Stopped")
             return
         }
+        active = true
+        musicNotice = nil
+        guard pauseMusic, let music = NSRunningApplication.runningApplications(withBundleIdentifier: "com.apple.Music").first else {
+            startStream()
+            return
+        }
+        status = "Switching from Music…"
+        pendingStart = Task {
+            do {
+                try Task.checkCancellation()
+                try await MusicPlayback.pause(music)
+            } catch {
+                guard !Task.isCancelled else { return }
+                musicNotice = "Couldn’t pause Music. You can pause it manually."
+            }
+            guard !Task.isCancelled else { return }
+            pendingStart = nil
+            startStream()
+        }
+    }
+
+    private func startStream() {
         let item = AVPlayerItem(url: URL(string: "https://media-ssl.musicradio.com/ClassicFMMP3")!)
         let next = AVPlayer(playerItem: item)
         player = next
-        active = true
         status = "Connecting…"
         observations = [
             next.observe(\.timeControlStatus, options: [.new]) { [weak self, weak next] _, _ in
@@ -51,6 +99,9 @@ final class Radio: ObservableObject {
     }
 
     private func stop(_ message: String) {
+        pendingStart?.cancel()
+        pendingStart = nil
+        musicNotice = nil
         observations.removeAll()
         endObservers.forEach(NotificationCenter.default.removeObserver)
         endObservers.removeAll()

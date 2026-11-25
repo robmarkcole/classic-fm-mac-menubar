@@ -39,6 +39,11 @@ struct PlayerPopover: View {
                 }
                 Text(radio.status).font(.caption).foregroundStyle(.secondary)
             }
+            Toggle("Pause Music when starting Classic FM", isOn: $radio.pauseMusic)
+                .toggleStyle(.checkbox)
+            if let notice = radio.musicNotice {
+                Text(notice).font(.caption).foregroundStyle(.secondary)
+            }
         }
         .padding(16).frame(width: 330)
         .task(id: visible) {
