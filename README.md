@@ -2,7 +2,11 @@
 
 An unofficial macOS menu bar app for streaming Classic FM live, with now-playing details and one-button playback via Stream Deck.
 
+<img src="docs/images/menu-bar.png" width="65" alt="Classic FM menu-bar item with its play button and FM dropdown">
+
 Click **▶** in the menu bar to play. Click **■** to stop. Each new session starts at the live broadcast. Click **FM ▾** for the piece, composer, cover artwork and playback status. The popover also has a Quit button.
+
+<img src="docs/images/now-playing.png" width="330" alt="Classic FM popover playing Fairytale of New York, with composer credits, album artwork and a Stop button">
 
 ## Build and run
 
