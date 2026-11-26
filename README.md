@@ -6,6 +6,8 @@ An unofficial macOS menu bar app for streaming Classic FM live, with now-playing
 
 Click **▶** in the menu bar to play. Click **■** to stop. Each new session starts at the live broadcast. Click **FM ▾** for the piece, composer, cover artwork and playback status. The popover also has a Quit button.
 
+Once you start Classic FM, the Mac keyboard’s **Play/Pause** media key stops and restarts the live stream while Classic FM is the current Now Playing app. If you switch to Music, the key follows macOS’s active player.
+
 <img src="docs/images/now-playing.png" width="330" alt="Classic FM playing Dvořák’s Serenade for Strings, with album artwork and the pause-Music checkbox enabled">
 
 ## Build and run

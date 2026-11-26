@@ -44,9 +44,19 @@ final class Radio: ObservableObject {
 
     func toggle() {
         if active {
-            stop("Stopped")
-            return
+            stop()
+        } else {
+            play()
         }
+    }
+
+    func stop() {
+        guard active else { return }
+        stop("Stopped")
+    }
+
+    func play() {
+        guard !active else { return }
         active = true
         musicNotice = nil
         guard pauseMusic, let music = NSRunningApplication.runningApplications(withBundleIdentifier: "com.apple.Music").first else {

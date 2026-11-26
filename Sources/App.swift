@@ -5,6 +5,7 @@ import SwiftUI
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
     private let radio = Radio()
+    private var mediaControls: MediaControls?
     private let feed = StationFeed()
     private let popover = NSPopover()
     private var item: NSStatusItem!
@@ -13,6 +14,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
     private lazy var panel = NSHostingController(rootView: PlayerPopover(radio: radio, feed: feed, visible: false))
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        mediaControls = MediaControls(radio: radio)
         item = NSStatusBar.system.statusItem(withLength: 65)
         guard let button = item.button else { return }
         button.title = "FM ▾ "
